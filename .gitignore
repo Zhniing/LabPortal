@@ -1,0 +1,8 @@
+.vscode/
+__pycache__/
+media/*
+backup.sql
+db.sqlite3
+nohup.out
+model/
+doc/

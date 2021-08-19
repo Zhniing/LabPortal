@@ -1,0 +1,141 @@
+{% load static %}
+
+{% comment %} <form action="" method="post" enctype="multipart/form-data">
+    <input type="file" name='img'>
+    <input type="submit" name='Submit'>
+</form> {% endcomment %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo</title>
+</head>
+<body>
+    <form id="img-form" enctype="multipart/form-data">
+        <div style="margin: 50px;">
+            <input type="file" name="upload" id="img">
+        </div>
+    </form>
+    <img src="" alt="横断面" id='upload_img_x' width="288px" height="384px">
+    <img src="" alt="冠状面" id='upload_img_y' width="288px" height="512px">
+    <img src="" alt="矢状面" id='upload_img_z' width="384px" height="512px">
+    <input type="text" name='x' id='x' style="width: 50px;" value=>X
+    <input type="text" name='y' id='y' style="width: 50px;" value=>Y
+    <input type="text" name='z' id='z' style="width: 50px;" value=>Z
+    <br>
+    <img src="" alt="横断面" id='result_img_x' width="288px" height="384px">
+    <img src="" alt="冠状面" id='result_img_y' width="288px" height="512px">
+    <img src="" alt="矢状面" id='result_img_z' width="384px" height="512px">
+    <div id='file_name' style="display:none"></div>
+    <script src={% static 'js/libs/jquery-3.6.0.js' %}></script>
+    <script>
+        var img = $('#img')[0]
+        var file_name = $('#file_name')[0]
+        var x = $('#x')[0]
+        var y = $('#y')[0]
+        var z = $('#z')[0]
+        img.onchange = function () {
+            console.log('upload')
+            let formData = new FormData($("#img-form")[0])
+            $.ajax({
+                url: 'http://localhost:8001/brain-seg/api/demo/', //请求路径
+                type: 'POST', // 请求类型
+                data: formData, // 请求数据
+                dataType: "JSON", // 返回数据格式
+                contentType: false, //表示不处理数据
+                processData: false,
+                cache: false,
+                success: function (data) {
+                    console.log('请求成功')
+                    console.log(data)
+
+                    $('#upload_img_x').attr('src', data.upload_img_x)
+                    $('#upload_img_y').attr('src', data.upload_img_y)
+                    $('#upload_img_z').attr('src', data.upload_img_z)
+                    $('#result_img_x').attr('src', data.result_img_x)
+                    $('#result_img_y').attr('src', data.result_img_y)
+                    $('#result_img_z').attr('src', data.result_img_z)
+                    file_name.innerHTML = data.image_name
+                    x.value = 129
+                    y.value = 97
+                    z.value = 73
+
+                    // if (data.result === 1) {
+                    //    alert("上传成功")
+                    // }else if (data.result === 0) {
+                    //    alert("上传失败")
+                    // }
+                },
+                error: function (data) {
+                    console.log('请求失败')
+                    console.log(data)
+                }
+                
+            })
+        }
+        x.onchange = function () {
+            $.ajax({
+                url: 'http://localhost:8001/brain-seg/api/demo/set_x/', //请求路径
+                type: 'post', // 请求类型
+                data: JSON.stringify({"img": file_name.innerHTML, "x": Number(x.value)}), // 请求数据
+                dataType: "json", // 返回数据格式
+                contentType: 'application/json;charset=utf-8', //表示不处理数据
+                success: function (data) {
+                    console.log('请求成功')
+                    console.log(data)
+
+                    $('#upload_img_x').attr('src', data.upload_img_x+"?t=" + Math.random())
+                    $('#result_img_x').attr('src', data.result_img_x+"?t=" + Math.random())
+                },
+                error: function (data) {
+                    console.log('请求失败')
+                    console.log(data)
+                }
+            })
+        }
+        y.onchange = function () {
+            $.ajax({
+                url: 'http://localhost:8001/brain-seg/api/demo/set_y/', //请求路径
+                type: 'post', // 请求类型
+                data: JSON.stringify({"img": file_name.innerHTML, "y": Number(y.value)}), // 请求数据
+                dataType: "json", // 返回数据格式
+                contentType: 'application/json;charset=utf-8', //表示不处理数据
+                success: function (data) {
+                    console.log('请求成功')
+                    console.log(data)
+
+                    $('#upload_img_y').attr('src', data.upload_img_y+"?t=" + Math.random())
+                    $('#result_img_y').attr('src', data.result_img_y+"?t=" + Math.random())
+                },
+                error: function (data) {
+                    console.log('请求失败')
+                    console.log(data)
+                }
+            })
+        }
+        z.onchange = function () {
+            $.ajax({
+                url: 'http://localhost:8001/brain-seg/api/demo/set_z/', //请求路径
+                type: 'post', // 请求类型
+                data: JSON.stringify({"img": file_name.innerHTML, "z": Number(z.value)}), // 请求数据
+                dataType: "json", // 返回数据格式
+                contentType: 'application/json;charset=utf-8', //表示不处理数据
+                success: function (data) {
+                    console.log('请求成功')
+                    console.log(data)
+
+                    $('#upload_img_z').attr('src', data.upload_img_z+"?t=" + Math.random())
+                    $('#result_img_z').attr('src', data.result_img_z+"?t=" + Math.random())
+                },
+                error: function (data) {
+                    console.log('请求失败')
+                    console.log(data)
+                }
+            })
+        }
+    </script>
+</body>
+</html>

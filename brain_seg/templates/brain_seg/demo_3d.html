@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>My first three.js app</title>
+		<style>
+			body { margin: 0; }
+		</style>
+	</head>
+	<body>
+        {% load static %}
+		<script>
+            result = {{ data }}
+		</script>
+		<script src={% static "js/libs/three.js"%}></script>
+		<script src={% static "js/libs/OrbitControls.js"%}></script>
+		<script src="{% static "js/demo_3d.js" %}"></script>
+	</body>
+</html>
